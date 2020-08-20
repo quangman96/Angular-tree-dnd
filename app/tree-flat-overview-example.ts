@@ -102,7 +102,7 @@ export class FileDatabase {
     // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
     //     file node as children.
     const data = nest_data;
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
 
     // Notify the change.
     this.dataChange.next(data);
@@ -147,6 +147,13 @@ export class FileDatabase {
   providers: [FileDatabase]
 })
 export class TreeFlatOverviewExample {
+  value = 'Clear me';
+ 
+  name: string;
+  iconVisible = false;
+  isEdit = false;
+    dataListDepartment = [];
+  tmpDataList = [];
 
   treeControl: FlatTreeControl<FileFlatNode>;
   treeFlattener: MatTreeFlattener<FileNode, FileFlatNode>;
@@ -262,6 +269,9 @@ export class TreeFlatOverviewExample {
     this.dragging = false;
   }
   dragHover(node: FileFlatNode) {
+    this.iconVisible = !this.iconVisible;
+    
+    
     if (this.dragging) {
       clearTimeout(this.expandTimeout);
       this.expandTimeout = setTimeout(() => {
@@ -270,9 +280,19 @@ export class TreeFlatOverviewExample {
     }
   }
   dragHoverEnd() {
+    this.iconVisible = !this.iconVisible;
+    
     if (this.dragging) {
       clearTimeout(this.expandTimeout);
     }
+  }
+  man(data) {
+    // this.isEdit = !this.isEdit;
+  this.name = data.name;
+  let id = data.id;
+  
+    this.isEdit = true;  
+    // console.log(this.isEdit);
   }
 
   /**
