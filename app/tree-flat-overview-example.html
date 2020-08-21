@@ -4,28 +4,34 @@
       <span>SYSTEM DIAGRAM</span>
     </mat-toolbar>
     <div class="contentContainer" style="overflow-y: scroll; overflow-x: hidden; height: 450px;">
+      <!-- children -->
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding cdkDrag [cdkDragData]="node"
           (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()"
           (cdkDragReleased)="dragEnd()">
           <button mat-icon-button disabled></button>
           {{ node.name }}
-          <button mat-icon-button class="hiddenButton" style="position: absolute; right: 1rem">
+          <button mat-icon-button class="hiddenButton" (click)="addNewItem(node)" style="position: absolute; right: 1rem">
             <mat-icon class="mat-icon-rtl-mirror">add</mat-icon>
           </button>
           <button mat-icon-button class="hiddenButton" style="position: absolute; right: 3rem">
             <mat-icon class="mat-icon-rtl-mirror" (click)="man(node)">create</mat-icon>
           </button>
-          
-        </mat-tree-node>
+        </mat-tree-node>  
         
+        <!-- input -->
+        <!-- <mat-tree-node matTreeNodePadding>
+          <button mat-icon-button disabled></button>
+          <mat-form-field>
+            <input matInput #itemValue placeholder="New item...">
+          </mat-form-field>
+          <button mat-button (click)="saveNode(itemValue.value)">Save</button>
+        </mat-tree-node> -->
 
+        <!-- father -->
         <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding cdkDrag [cdkDragData]="node"
           (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()"
           (cdkDragReleased)="dragEnd()" >
-
-
-
           <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
             <mat-icon class="mat-icon-rtl-mirror">
               {{
@@ -34,10 +40,10 @@
             </mat-icon>
           </button>
           <span>{{ node.name }}</span>
-          <button mat-icon-button class="hiddenButton" style="position: absolute; right: 1rem">
+          <button mat-icon-button class="hiddenButton" (click)="addNewItem(node)" style="position: absolute; right: 1rem">
             <mat-icon class="mat-icon-rtl-mirror">add</mat-icon>
           </button>
-          <button mat-icon-button class="hiddenButton" style="position: absolute; right: 3rem">
+          <button mat-icon-button class="hiddenButton" style="position: absolute; right: 4rem">
             <mat-icon class="mat-icon-rtl-mirror" (click)="man(node)">create</mat-icon>
           </button>
           <!-- <button mat-button color="primary" [matMenuTriggerFor]="menu" class="HiddenButton">Primary</button> -->
@@ -48,8 +54,10 @@
   </div>
 </div>
 
+<mat-menu #menu="matMenu">
+  <input type="text" />
+</mat-menu>
 
-
-<!-- Copyright 2019 Google Inc. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license -->
+<ng-template #manmeo>
+  <input type="text" value = "manmeo" />
+</ng-template>

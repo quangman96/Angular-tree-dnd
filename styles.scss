@@ -3,8 +3,8 @@
 @import "~@angular/material/theming";
 
 .DepartmentWrapper {
-  // height: 30%;
-  width: 100%;
+  min-height: 550px;
+  min-width: 650px;
   padding: 30px;
   display: flex;
   flex-direction: row;
