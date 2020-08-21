@@ -14,19 +14,22 @@
           <button mat-icon-button class="hiddenButton" (click)="addNewItem(node)" style="position: absolute; right: 1rem">
             <mat-icon class="mat-icon-rtl-mirror">add</mat-icon>
           </button>
-          <button mat-icon-button class="hiddenButton" style="position: absolute; right: 3rem">
-            <mat-icon class="mat-icon-rtl-mirror" (click)="man(node)">create</mat-icon>
+          <button mat-icon-button class="hiddenButton" style="position: absolute; right: 4rem">
+            <mat-icon class="mat-icon-rtl-mirror" (click)="editItem(node)">create</mat-icon>
           </button>
         </mat-tree-node>  
         
         <!-- input -->
-        <!-- <mat-tree-node matTreeNodePadding>
+        <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding cdkDrag [cdkDragData]="node"
+        (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()"
+        (cdkDragReleased)="dragEnd()">
           <button mat-icon-button disabled></button>
-          <mat-form-field>
-            <input matInput #itemValue placeholder="New item...">
+          <mat-form-field class="manmeomeo">
+            <input matInput #itemValue placeholder="New department...">
           </mat-form-field>
-          <button mat-button (click)="saveNode(itemValue.value)">Save</button>
-        </mat-tree-node> -->
+          <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+          <button mat-button (click)="closeNode(node)">Close</button>
+        </mat-tree-node>
 
         <!-- father -->
         <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding cdkDrag [cdkDragData]="node"
@@ -44,7 +47,7 @@
             <mat-icon class="mat-icon-rtl-mirror">add</mat-icon>
           </button>
           <button mat-icon-button class="hiddenButton" style="position: absolute; right: 4rem">
-            <mat-icon class="mat-icon-rtl-mirror" (click)="man(node)">create</mat-icon>
+            <mat-icon class="mat-icon-rtl-mirror" (click)="editItem(node)">create</mat-icon>
           </button>
           <!-- <button mat-button color="primary" [matMenuTriggerFor]="menu" class="HiddenButton">Primary</button> -->
         </mat-tree-node>

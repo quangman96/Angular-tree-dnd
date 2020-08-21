@@ -20,9 +20,12 @@ export class OrganizationalChartComponent implements OnInit {
   name: string;
   iconVisible = false;
   isEdit = false;
+  isCreate = false;
   treeControl: FlatTreeControl<FileFlatNode>;
   treeFlattener: MatTreeFlattener<FileNode, FileFlatNode>;
   dataSource: MatTreeFlatDataSource<FileNode, FileFlatNode>;
+  flatNodeMap: Map<FileFlatNode, FileNode> = new Map<FileFlatNode, FileNode>();
+  nestedNodeMap: Map<FileNode, FileFlatNode> = new Map<FileNode, FileFlatNode>();
   expandedNodeSet = new Set<string>();
   dragging = false;
   expandTimeout: any;
@@ -30,8 +33,7 @@ export class OrganizationalChartComponent implements OnInit {
   dataListDepartment = [];
   tmpDataList = [];
   //TODO
-  // flatNodeMap: Map<FileFlatNode, FileNode> = new Map<FileFlatNode, FileNode>();
-  // nestedNodeMap: Map<FileNode, FileFlatNode> = new Map<FileNode, FileFlatNode>();
+  
 
   constructor(private departmentService: DepartmentService, private fileData: FileDataService) { }
   
@@ -44,12 +46,12 @@ export class OrganizationalChartComponent implements OnInit {
   }
   
   transformer = (node: FileNode, level: number) => {
-    // let flatNode = new FileFlatNode(!!node.children, node.id, node.name, node.parent_id, level);
+    let flatNode = new FileFlatNode(!!node.children, node.id, node.name, node.parent_id, level);
     //TODO
-    // this.flatNodeMap.set(flatNode, node);
-    // this.nestedNodeMap.set(node, flatNode);
-    // return flatNode;
-    return new FileFlatNode(!!node.children, node.id, node.name, node.parent_id, level);
+    this.flatNodeMap.set(flatNode, node);
+    this.nestedNodeMap.set(node, flatNode);
+    return flatNode;
+    // return new FileFlatNode(!!node.children, node.id, node.name, node.parent_id, level);
   }
 
   private _getLevel = (node: FileFlatNode) => node.level;
@@ -57,7 +59,7 @@ export class OrganizationalChartComponent implements OnInit {
   private _getChildren = (node: FileNode): Observable<FileNode[]> => observableOf(node.children);
   hasChild = (_: number, _nodeData: FileFlatNode) => _nodeData.expandable;
   //TODO
-  // hasNoContent = (_: number, _nodeData: FileFlatNode) => _nodeData.name === '';
+  hasNoContent = (_: number, _nodeData: FileFlatNode) => _nodeData.name === '';
   
   visibleNodes(): FileNode[] {
     this.rememberExpandedTreeNodes(this.treeControl, this.expandedNodeSet);
@@ -142,13 +144,13 @@ export class OrganizationalChartComponent implements OnInit {
       clearTimeout(this.expandTimeout);
     }
   }
-  man(data) {
+  editItem(data) {
     // this.isEdit = !this.isEdit;
-  this.name = data.name;
-  let id = data.id;
+  // this.name = data.name;
+  // let id = data.id;
+  
   
     this.isEdit = true;  
-    // console.log(id);
   }
   rebuildTreeForData(data: any) {
     this.rememberExpandedTreeNodes(this.treeControl, this.expandedNodeSet);
@@ -158,26 +160,31 @@ export class OrganizationalChartComponent implements OnInit {
   }
   //TODO
   addNewItem(node: FileFlatNode) {
-    }
-  //   const parentNode = this.flatNodeMap.get(node);
-  //   console.log(parentNode);
-  //   // 
-  //   let isParentHasChildren: boolean = false;
-  //   if (parentNode.children)
-  //     isParentHasChildren = true;
-  //   //
-  //   this.fileData.insertItem(parentNode!, '');
-  //   // expand the subtree only if the parent has children (parent is not a leaf node)
-  //   if (isParentHasChildren)
-  //     this.treeControl.expand(node);
-  // }
-
-  // saveNode(node: FileFlatNode, itemValue: string) {
-  //   // const nestedNode = this.flatNodeMap.get(node);
-  //   // this._database.updateItem(nestedNode!, itemValue);
-  //   // console.log(itemValue);
+    const parentNode = this.flatNodeMap.get(node);
+       // let isParentHasChildren: boolean = false;
+    // if (parentNode.children) {
+    //   isParentHasChildren = true;
+    // }
+    // if (isParentHasChildren) {
+      this.treeControl.expand(node);
+    // }
+    this.fileData.insertItem(parentNode!, '');
     
-  // }
+  }
+
+  saveNode(node: FileFlatNode, itemValue: string) {
+    const parentNode = this.getParentNode(node);
+    node.parent_id = parentNode.id;
+    node.name = itemValue;
+    console.log(node);
+  }
+
+  closeNode(node: FileFlatNode) {
+    const parentNode = this.getParentNode(node);
+    
+    const parentFlat = this.flatNodeMap.get(parentNode);
+    this.fileData.deleteItem(parentFlat!, node.name);  
+  }
 
     private rememberExpandedTreeNodes(
       treeControl: FlatTreeControl<FileFlatNode>,
@@ -223,6 +230,7 @@ export class OrganizationalChartComponent implements OnInit {
 
   private getParentNode(node: FileFlatNode): FileFlatNode | null {
     const currentLevel = node.level;
+    
     if (currentLevel < 1) {
       return null;
     }

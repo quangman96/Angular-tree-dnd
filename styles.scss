@@ -83,6 +83,7 @@ body {
  */
 
 .mat-tree-node {
+  max-height: 60px;
   position: relative;
   margin-top: 2px;
   background-color: #F8F9FA;
@@ -125,6 +126,11 @@ body {
   transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
 }
 
+.manmeomeo {
+  max-height: 57px;
+  width: 65%;
+}
+
 .manmeo {
   visibility: hidden;
   float: right;
@@ -139,6 +145,10 @@ body {
 .example-headers-align .mat-expansion-panel-header-title,
 .example-headers-align .mat-expansion-panel-header-description {
   flex-basis: 0;
+}
+
+.mat-button {
+  padding:0px;
 }
 
 .example-headers-align .mat-expansion-panel-header-description {
